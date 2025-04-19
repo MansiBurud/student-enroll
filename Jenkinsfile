@@ -1,53 +1,49 @@
 pipeline {
     agent any
 
-    environment {
-        PYTHON_ENV = 'python3'
-    }
-
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                // Clone the code from the repository
-                git 'https://github.com/MansiBurud/student-enroll.git'
+                // Checkout the code from Git repository, specify the correct branch name (main)
+                git branch: 'main', url: 'https://github.com/MansiBurud/student-enroll.git'
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                // Install the dependencies from the requirements.txt file
-                sh 'pip install -r requirements.txt'
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         // Install dependencies from the requirements.txt file
+        //         sh 'pip install -r requirements.txt'
+        //     }
+        // }
 
         stage('Run Tests') {
             steps {
-                // Placeholder to run any tests (you can modify this if you add tests)
-                sh 'pytest'
+                // Add your test running command here
+                sh 'pytest'  // For example, if you're using pytest for testing
             }
         }
 
         stage('Build App') {
             steps {
-                // Build your app if required (usually unnecessary for Streamlit apps)
-                echo 'Building app...'
+                // Add your build steps here
+                sh 'python setup.py install'  // Example build command
             }
         }
 
         stage('Run App') {
             steps {
-                // Run the Streamlit app for CI purposes
-                sh 'streamlit run app.py'
+                // Run the application
+                sh 'python app.py'  // Example command to run the app
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline completed successfully.'
-        }
         failure {
             echo 'Pipeline failed.'
+        }
+        success {
+            echo 'Pipeline completed successfully.'
         }
     }
 }
