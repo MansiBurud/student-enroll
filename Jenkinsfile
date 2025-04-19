@@ -4,46 +4,50 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from Git repository, specify the correct branch name (main)
+                cleanWs()
                 bat 'git clone -b main https://github.com/MansiBurud/student-enroll.git'
             }
         }
 
-        // stage('Install Dependencies') {
-        //     steps {
-        //         // Install dependencies from the requirements.txt file
-        //         bat 'pip install -r requirements.txt'
-        //     }
-        // }
+        stage('Install Dependencies') {
+            steps {
+                dir('student-enroll') {
+                    bat 'pip install -r requirements.txt'
+                }
+            }
+        }
 
         stage('Run Tests') {
             steps {
-                // Add your test running command here
-                bat 'pytest'  // For example, if you're using pytest for testing
+                dir('student-enroll') {
+                    bat 'pytest'
+                }
             }
         }
 
         stage('Build App') {
             steps {
-                // Add your build steps here
-                bat 'python setup.py install'  // Example build command
+                dir('student-enroll') {
+                    bat 'python setup.py install'
+                }
             }
         }
 
         stage('Run App') {
             steps {
-                // Run the application
-                bat 'python app.py'  // Example command to run the app
+                dir('student-enroll') {
+                    bat 'python app.py'
+                }
             }
         }
     }
 
     post {
         failure {
-            echo 'Pipeline failed.'
+            echo '🚫 Pipeline failed.'
         }
         success {
-            echo 'Pipeline completed successfully.'
+            echo '✅ Pipeline completed successfully.'
         }
     }
 }
