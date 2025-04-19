@@ -9,10 +9,17 @@ pipeline {
             }
         }
 
+        stage('Check Python') {
+            steps {
+                bat 'python --version'
+                bat 'python -m pip --version'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 dir('student-enroll') {
-                    bat 'pip install -r requirements.txt'
+                    bat 'python -m pip install -r requirements.txt'
                 }
             }
         }
@@ -20,7 +27,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 dir('student-enroll') {
-                    bat 'pytest'
+                    bat 'python -m pytest'
                 }
             }
         }
